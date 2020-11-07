@@ -5,18 +5,16 @@
 
 const uint32_t I2C_FREQ = 50000;
 
-const int32_t mpu_base_accel_bias[] = {-295, 23, 65};
-const int32_t mpu_base_gyro_bias[] = {425, 70, -946};
-const float mpu_base_mag_bias[] = { -13756.90, 223.41, 821.67 };
-const float mpu_base_mag_scale[] = { 0.38, 14.71, 3.51 };
-
+const int32_t mpu_base_accel_bias[] = {-238, 16, 41};
+const int32_t mpu_base_gyro_bias[] = {188, 64, -1166};
+const float mpu_base_mag_bias[] = { 77.97, 232.41, -424.33 };
+const float mpu_base_mag_scale[] = { 0.96, 1.06, 0.99 };
 MPU9250 mpu_base(MPU9250_ADDRESS_AD1, Wire, I2C_FREQ);
 
-const int32_t mpu_wrist_accel_bias[] = {-92, 14, 26};
-const int32_t mpu_wrist_gyro_bias[] = {-1209, -36, -516};
-const float mpu_wrist_mag_bias[] = {-13395.55, 391.34, 961.11};
-const float mpu_wrist_mag_scale[] = {0.38, 13.37, 3.54};
-
+const int32_t mpu_wrist_accel_bias[] = {-7, 160, 19};
+const int32_t mpu_wrist_gyro_bias[] = {-964, 425, -276};
+const float mpu_wrist_mag_bias[] = {128.95, -34.49, -131.95};
+const float mpu_wrist_mag_scale[] = {1.03, 1.02, 0.96};
 MPU9250 mpu_wrist(MPU9250_ADDRESS_AD0, Wire, I2C_FREQ);
 
 MPU9250* imus[] = {&mpu_base, &mpu_wrist};
@@ -101,14 +99,16 @@ void setup()
   if (mpu_wrist.isEnabled)
   {
     mpu_wrist.setAccGyroBias(mpu_wrist_gyro_bias, mpu_wrist_accel_bias);
-    mpu_wrist.setMagBiasScale(mpu_wrist_mag_bias, mpu_wrist_mag_bias);
+    mpu_wrist.setMagBiasScale(mpu_wrist_mag_bias, mpu_wrist_mag_scale);
   }
 
   // calibtration functions, do this to find bias and scale values.
   // WARNING: only do either calibrate_acc_gyro, or calibrate_mag in one go 
   // (calibrate_acc_gyro changes some state and the mag readings will nto work anymore)
   //calibrate_acc_gyro(&mpu_base);
-  //calibrate_mag(mpu_base);
+  //mpu_base.update();
+  //mpu_base.update();
+  //calibrate_mag(&mpu_base);
 }
 
 uint32_t ts = 0;
@@ -128,9 +128,9 @@ void loop()
     Serial.println();
     
     Serial.print("ypr: "); Serial.print(imu->yaw); Serial.print(" "); Serial.print(imu->pitch); Serial.print(" "); Serial.println(imu->roll);
-    //Serial.print("acc: "); Serial.print(imu->ax); Serial.print(" "); Serial.print(imu->ay); Serial.print(" "); Serial.println(imu->az);
-    //Serial.print("gyro:"); Serial.print(imu->gx); Serial.print(" "); Serial.print(imu->gy); Serial.print(" "); Serial.println(imu->gz);
-    //Serial.print("mag:"); Serial.print(imu->mx); Serial.print(" "); Serial.print(imu->my); Serial.print(" "); Serial.println(imu->mz);
+    Serial.print("acc: "); Serial.print(imu->ax); Serial.print(" "); Serial.print(imu->ay); Serial.print(" "); Serial.println(imu->az);
+    Serial.print("gyro:"); Serial.print(imu->gx); Serial.print(" "); Serial.print(imu->gy); Serial.print(" "); Serial.println(imu->gz);
+    Serial.print("mag:"); Serial.print(imu->mx); Serial.print(" "); Serial.print(imu->my); Serial.print(" "); Serial.println(imu->mz);
     //Serial.print("temp: "); Serial.println(imu->temperature);
     //Serial.println();
     ts = now;

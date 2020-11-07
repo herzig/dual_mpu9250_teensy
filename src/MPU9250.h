@@ -232,9 +232,10 @@ class MPU9250
     // Scale resolutions per LSB for the sensors
     float aRes, gRes, mRes;
 
-    MahonyFilter fusion_filter;
+
 
   public:
+    MahonyFilter fusion_filter;
     uint8_t i2cAddr = MPU9250_ADDRESS_AD0;	// Use AD0 by default
 
     bool isEnabled = false; // wether the update() method does any work
